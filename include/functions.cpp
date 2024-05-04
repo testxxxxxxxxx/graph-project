@@ -126,5 +126,5 @@ namespace Functions
 
         return matrix;
     }
-    
+
 };
