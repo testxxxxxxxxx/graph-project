@@ -25,6 +25,16 @@ namespace Functions
 
         }
 
+        for(int x = 0; x < nodes; x++)
+        {
+            for(int y = 0; y < nodes; y++)
+            {
+                graph[x][y] = 0;
+
+            }
+
+        }
+
         std::vector<int> parent(nodes, -1);
         std::vector<bool> inMST(nodes, false);
         std::vector<double> weight(nodes, std::numeric_limits<double>::max());
@@ -81,28 +91,16 @@ namespace Functions
         return graph;
 
     }
-    int** generateGraph(string *inputMatrix, int size, int key)
+    int** generateGraphMatrix(string *inputMatrix, int size)
     {
         int **matrix = new int*[size];
-        string inputValue = "";
         string value = "";
-        int it = 0;
 
         for(int i = 0; i < size; i++)
         {
-            inputValue = inputMatrix[i];;
-            int sizeVector = 0;
-            it = 0;
             value = "";
 
-            for(int j = 0; j < inputMatrix[i].length(); j++)
-            {
-                if(inputMatrix[i][j] == ' ')
-                    sizeVector++;
-
-            }
-
-            matrix[i] = new int[sizeVector];
+            matrix[i] = new int[size];
 
             for(int x = 0; x < inputMatrix[i].length(); x++)
             {
@@ -113,11 +111,10 @@ namespace Functions
                 }
                 else
                 {
-                    matrix[i][it] = stoi(value);
+                    matrix[i][stoi(value)] = 1;
 
                     value = "";
 
-                    it++;
                 }
 
             }
@@ -125,6 +122,87 @@ namespace Functions
         }
 
         return matrix;
+    }
+    int** generateGraphList(string *inputList, int nodes, int size)
+    {
+        int **list = new int*[size];
+        string inputValue = "";
+        string value = "";
+        int it = 0;
+
+        for(int i = 0; i < size; i++)
+        {
+            list[i] = new int[2];
+
+        }
+
+        for(int i = 0; i < nodes; i++)
+        {
+            value = "";
+
+            for(int x = 0; x < inputList[i].length(); x++)
+            {
+                if(inputList[i][x] != ' ')
+                {
+                    value += inputList[i][x];
+
+                }
+                else
+                {
+                    list[it][0] = i;
+                    list[it][1] = stoi(value);
+
+                    value = "";
+                    it++;
+                }
+
+            }
+
+        }
+
+        return list;
+
+    }
+    int **generateGraphTable(string *inputTable, int size)
+    {
+        int **table = new int*[size];
+        string inputValue = "";
+        string value = "";
+        int sizeVector = 0;
+        int it = 0;
+
+        for(int i = 0; i < size; i++)
+        {
+            table[i] = new int[size];
+
+        }
+
+        for(int i = 0; i < size; i++)
+        {
+            it = 0;
+            value = "";
+
+            for(int x = 0; x < inputTable[i].length(); x++)
+            {
+                if(inputTable[i][x] != ' ')
+                {
+                    value += inputTable[i][x];
+
+                }
+                else
+                {
+                    table[i][it] = stoi(value);
+
+                    value = "";
+                    it++;
+
+                }
+
+            }
+
+        }
+
+        return table;
     }
 
 };
