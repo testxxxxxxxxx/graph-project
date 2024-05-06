@@ -123,63 +123,21 @@ namespace Functions
 
         return matrix;
     }
-    int** generateGraphList(string *inputList, int nodes, int size)
+    int** generateGraphTable(string *inputTable, int nodes, int size)
     {
-        int **list = new int*[size];
+        int **table = new int*[size];
         string inputValue = "";
         string value = "";
         int it = 0;
 
         for(int i = 0; i < size; i++)
         {
-            list[i] = new int[2];
+            table[i] = new int[2];
 
         }
 
         for(int i = 0; i < nodes; i++)
         {
-            value = "";
-
-            for(int x = 0; x < inputList[i].length(); x++)
-            {
-                if(inputList[i][x] != ' ')
-                {
-                    value += inputList[i][x];
-
-                }
-                else
-                {
-                    list[it][0] = i;
-                    list[it][1] = stoi(value);
-
-                    value = "";
-                    it++;
-                }
-
-            }
-
-        }
-
-        return list;
-
-    }
-    int **generateGraphTable(string *inputTable, int size)
-    {
-        int **table = new int*[size];
-        string inputValue = "";
-        string value = "";
-        int sizeVector = 0;
-        int it = 0;
-
-        for(int i = 0; i < size; i++)
-        {
-            table[i] = new int[size];
-
-        }
-
-        for(int i = 0; i < size; i++)
-        {
-            it = 0;
             value = "";
 
             for(int x = 0; x < inputTable[i].length(); x++)
@@ -191,7 +149,51 @@ namespace Functions
                 }
                 else
                 {
-                    table[i][it] = stoi(value);
+                    table[it][0] = i;
+                    table[it][1] = stoi(value);
+
+                    value = "";
+                    it++;
+                }
+
+            }
+
+        }
+
+        return table;
+
+    }
+    int **generateGraphList(string *inputList, int size)
+    {
+        int **list = new int*[size];
+        string inputValue = "";
+        string value = "";
+        int sizeVector = 0;
+        int it = 0;
+
+        for(int i = 0; i < size; i++)
+        {
+            list[i] = new int[size];
+
+            fill_n(list[i], size, -1);
+
+        }
+
+        for(int i = 0; i < size; i++)
+        {
+            it = 0;
+            value = "";
+
+            for(int x = 0; x < inputList[i].length(); x++)
+            {
+                if(inputList[i][x] != ' ')
+                {
+                    value += inputList[i][x];
+
+                }
+                else
+                {
+                    list[i][it] = stoi(value);
 
                     value = "";
                     it++;
@@ -202,7 +204,134 @@ namespace Functions
 
         }
 
-        return table;
+        return list;
+    }
+    void printMatrix(int **matrix, int size)
+    {
+        cout<<" "<<"|";
+
+        for(int i = 0; i < size; i++)
+        {
+            cout<<i<<" ";
+
+        }
+
+        cout<<endl;
+
+        cout<<"--"<<"+";
+
+        for(int i = 0; i < 2 * size; i++)
+        {
+            cout<<"-";
+
+        }
+
+        cout<<endl;
+
+        for(int x = 0; x < size; x++)
+        {
+            cout<<x<<" "<<"|";
+
+            for(int y = 0; y < size; y++)
+            {
+                cout<<matrix[x][y]<<" ";
+
+            }
+
+            cout<<endl;
+
+        }
+
+    }
+    void printTable(int **table, int size)
+    {
+        cout<<"[ ";
+
+        for(int i = 0; i < size; i++)
+        {
+            cout<<"[ ";
+
+            for(int j = 0; j < 2; j++)
+            {
+                cout<<table[i][j];
+
+                if(j < 1)
+                    cout<<" ,";
+
+            }
+
+            cout<<" ]";
+
+        }
+
+        cout<<endl;
+
+    }
+    void printList(int **list, int size)
+    {
+
+        for(int i = 0; i < size; i++)
+        {
+            cout<<i<<" ";
+
+            for(int j = 0; j < size; j++)
+            {
+                if(list[i][j] != -1)
+                    cout<<list[i][j]<<" ";
+
+            }
+
+            cout<<endl;
+
+        }
+
+    }
+    bool findEdgeInMatrix(int **matrix, int size, int from, int to)
+    {
+        bool isInSet = from > 0 && from <= size && to > 0 && to <= size;
+
+        if(isInSet)
+        {
+            if(matrix[from][to] == 1)
+                return true;
+
+        }
+
+        return false;
+    }
+    bool findEdgeInTable(int **table, int size, int from, int to)
+    {
+        bool isInSet = from > 0 && from <= size && to > 0 && to <= size;
+
+        if(isInSet)
+        {
+            for(int i = 0; i < size; i++)
+            {
+                if(table[i][0] == from && table[i][1] == to)
+                    return true;
+
+            }
+
+        }
+
+        return false;
+    }
+    bool findEdgeInList(int **list, int size, int from, int to)
+    {
+        bool isInSet = from > 0 && from <= size && to > 0 && to <= size;
+
+        if(isInSet)
+        {
+            for(int j = 0; j < size; j++)
+            {
+                    if(list[from][j] == to)
+                        return true;
+
+            }
+
+        }
+
+        return false;
     }
 
 };
