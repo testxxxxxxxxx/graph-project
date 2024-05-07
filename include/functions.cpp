@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <random>
 
 using namespace std;
@@ -332,6 +333,240 @@ namespace Functions
         }
 
         return false;
+    }
+    void bfsMatrix(int** matrix, int size, int start) 
+    {
+        bool *visited = new bool[size]; 
+        for (int i = 0; i < size; i++)
+        {
+            visited[i] = false;
+        }
+
+        queue<int> q;
+
+        visited[start] = true;
+        q.push(start);
+
+        int vertex = 0;
+
+        while (!q.empty()) {
+            vertex = q.front();
+            q.pop();
+            cout << vertex << " ";
+
+            for (int neighbor = 0; neighbor < size; ++neighbor) 
+            {
+                if (matrix[vertex][neighbor] == 1 && !visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+
+        delete[] visited;
+
+    }
+    void bfsTable(int **table, int size, int start)
+    {
+        bool *visited = new bool[size];
+
+        for(int i = 0; i < size; i++)
+        {
+            visited[i] = false;
+
+        }
+
+        queue<int> q;
+
+        visited[start] = true;
+        q.push(start);
+
+        int vertex = 0;
+
+        while(!q.empty())
+        {
+            vertex = q.front();
+
+            q.pop();
+
+            cout<<vertex<<" ";
+
+            for (int i = 0; i < 2; ++i) {
+                int neighbor = table[vertex][i];
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+
+        }
+
+        delete[] visited;
+
+    }
+    void bfsList(int **list, int size, int start)
+    {
+        bool *visited = new bool[size];
+
+        for(int i = 0; i < size; i++)
+        {
+            visited[i] = false;
+
+        }
+
+        queue<int> q;
+
+        visited[start] = true;
+        q.push(start);
+
+        int vertex = 0;
+
+        while(!q.empty())
+        {
+            vertex = q.front();
+
+            q.pop();
+
+            cout<<vertex<<" ";
+
+            for (int i = 0; i < size; ++i) {
+                int successor = list[vertex][i];
+                if (!visited[successor] && list[vertex][i] != -1) 
+                {
+                    visited[successor] = true;
+                    q.push(successor);
+                }
+
+            }
+
+        }
+
+        delete[] visited;
+
+    }
+    void dfsMatrix(int **matrix, int vertex, vector<bool>& visited, int size) 
+    {
+        visited[vertex] = true;
+        cout << vertex << " "; 
+
+        for (int neighbor = 0; neighbor < size; neighbor++) 
+        {
+            if (matrix[vertex][neighbor] == 1 && !visited[neighbor]) 
+                dfsMatrix(matrix, neighbor, visited, size);
+            
+        }
+    }
+
+    void dfsTraversalMatrix(int **matrix, int size) 
+    {
+        int numVertices = size;
+
+        vector<bool> visited(numVertices, false);
+
+        cout << "DFS traversal: ";
+        for (int i = 0; i < numVertices; ++i) 
+        {
+            if (!visited[i])
+                dfsMatrix(matrix, i, visited, size);
+            
+        }
+    }
+    void dfsTable(int **table, int vertex, vector<bool>& visited, int size) 
+    {
+        visited[vertex] = true;
+        cout << vertex << " "; 
+
+        for (int i = 0; i < 2; i++) 
+        {
+            int neighbor = table[vertex][i];
+
+            if(!visited[neighbor])
+                dfsTable(table, neighbor, visited, size);
+
+        }
+            
+    }
+    void dfsTraversalTable(int **table, int size) 
+    {
+        int numVertices = size;
+
+        vector<bool> visited(numVertices, false);
+
+        cout << "DFS traversal: ";
+        for (int i = 0; i < numVertices; ++i) {
+            if (!visited[i])
+                dfsTable(table, i, visited, size);
+            
+        }
+    }
+    void dfsList(int **list, int vertex, vector<bool>& visited, int size) 
+    {
+        visited[vertex] = true;
+        cout << vertex << " "; 
+
+        for (int i = 0; i < size; i++) 
+        {
+            int s = list[vertex][i];
+
+            if(!visited[s] && list[vertex][i] != -1)
+                dfsList(list, s, visited, size);
+
+        }
+    }
+    void dfsTraversalList(int **list, int size) 
+    {
+        int numVertices = size;
+
+        vector<bool> visited(numVertices, false);
+
+        cout << "DFS traversal: ";
+        for (int i = 0; i < numVertices; ++i) 
+        {
+            if (!visited[i]) 
+                dfsList(list, i, visited, size);
+            
+        }
+
+    }
+    vector<int> topologicalSortKhan(int **matrix, int size) 
+    {
+        int numVertices = size;
+        vector<int> sortedOrder; 
+
+        vector<int> inDegree(numVertices, 0);
+
+        for (int i = 0; i < numVertices; ++i) {
+            for (int j = 0; j < numVertices; ++j) {
+                if (matrix[i][j] == 1)
+                    inDegree[j]++;
+            }
+        }
+
+        queue<int> q;
+        for (int i = 0; i < numVertices; ++i) {
+            if (inDegree[i] == 0)
+                q.push(i);
+        }
+
+        while (!q.empty()) {
+            int vertex = q.front();
+            q.pop();
+            sortedOrder.push_back(vertex);
+
+            for (int neighbor = 0; neighbor < numVertices; ++neighbor) {
+                if (matrix[vertex][neighbor] == 1) {
+                    inDegree[neighbor]--;
+                    if (inDegree[neighbor] == 0)
+                        q.push(neighbor);
+                }
+            }
+        }
+
+        if (sortedOrder.size() != numVertices) {
+            sortedOrder.clear();
+        }
+
+        return sortedOrder;
     }
 
 };
