@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <queue>
 #include <random>
 
@@ -90,7 +91,6 @@ namespace Functions
         }
 
         return graph;
-
     }
     int** generateGraphMatrix(string *inputMatrix, int size)
     {
@@ -99,9 +99,13 @@ namespace Functions
 
         for(int i = 0; i < size; i++)
         {
-            value = "";
-
             matrix[i] = new int[size];
+
+        }
+
+        for(int i = 0; i < size; i++)
+        {
+            value = "";
 
             for(int x = 0; x < inputMatrix[i].length(); x++)
             {
@@ -109,10 +113,19 @@ namespace Functions
                 {
                     value += inputMatrix[i][x];
 
+                    if(x == inputMatrix[i].length() - 1)
+                    {
+                        matrix[i][stoi(value)] = 1;
+
+                        value = "";
+
+                    }
                 }
                 else
                 {
                     matrix[i][stoi(value)] = 1;
+
+                    cout<<value<<endl;
 
                     value = "";
 
@@ -124,7 +137,7 @@ namespace Functions
 
         return matrix;
     }
-    int** generateGraphTable(string *inputTable, int nodes, int size)
+    int** generateGraphTable(string *inputTable, int size)
     {
         int **table = new int*[size];
         string inputValue = "";
@@ -137,7 +150,7 @@ namespace Functions
 
         }
 
-        for(int i = 0; i < nodes; i++)
+        for(int i = 0; i < size; i++)
         {
             value = "";
 
@@ -528,7 +541,7 @@ namespace Functions
         }
 
     }
-    vector<int> topologicalSortKhan(int **matrix, int size) 
+    vector<int> topologicalSortKhanMatrix(int **matrix, int size) 
     {
         int numVertices = size;
         vector<int> sortedOrder; 
@@ -567,6 +580,188 @@ namespace Functions
         }
 
         return sortedOrder;
+    }
+    vector<int> topologicalSortKhanTable(int **table, int numVertices) 
+    {
+        vector<int> sortedOrder;
+
+        vector<int> inDegree(numVertices, 0);
+
+        for (int i = 0; i < numVertices; ++i) 
+        {
+            for(int j = 0; j < 2; j++)
+            {
+                inDegree[table[i][j]]++;
+
+            }
+
+        }
+
+        queue<int> q;
+        for (int i = 0; i < numVertices; ++i) 
+        {
+            if (inDegree[i] == 0)
+                q.push(i);
+        }
+
+        while (!q.empty()) {
+            int vertex = q.front();
+            q.pop();
+            sortedOrder.push_back(vertex);
+
+            for(int i = 0; i < 2; i++)
+            {
+                inDegree[table[vertex][i]]--;
+                if(inDegree[table[vertex][i]] == 0)
+                    q.push(table[vertex][i]);
+            }
+
+        }
+
+        if (sortedOrder.size() != numVertices) 
+            sortedOrder.clear();
+
+        return sortedOrder; 
+    }
+    vector<int> topologicalSortKhanList(int **list, int numVertices) 
+    {
+        vector<int> sortedOrder;
+
+        vector<int> inDegree(numVertices, 0); 
+
+        for (int i = 0; i < numVertices; ++i) {
+            for(int j = 0; j < numVertices; j++)
+            {
+                if(list[i][j] != -1)
+                    inDegree[list[i][j]]++;
+
+            }
+            
+        }
+
+        queue<int> q;
+        for (int i = 0; i < numVertices; ++i) {
+            if (inDegree[i] == 0)
+                q.push(i);
+        }
+
+        while (!q.empty()) {
+            int vertex = q.front();
+            q.pop();
+            sortedOrder.push_back(vertex);
+
+            for(int i = 0; i < numVertices; i++)
+            {
+                if(list[vertex][i] != -1)
+                {
+                    inDegree[list[vertex][i]]--;
+
+                    if(inDegree[list[vertex][i]] == 0)
+                        q.push(list[vertex][i]);
+
+                }
+
+            }
+        }
+
+        if (sortedOrder.size() != numVertices) 
+            sortedOrder.clear();
+
+        return sortedOrder;
+    }
+    void tarjansSCCMatrix(int u, int** graph, vector<int>& low, vector<int>& disc, stack<int>& st, vector<bool>& stackMember, vector<vector<int>>& SCCs, int& time, int size) 
+    {
+        disc[u] = low[u] = ++time;
+        st.push(u);
+        stackMember[u] = true;
+
+        for (int v = 0; v < size; ++v) {
+            if (graph[u][v] == 1) {
+                if (disc[v] == -1) {
+                    tarjansSCCMatrix(v, graph, low, disc, st, stackMember, SCCs, time, size);
+                    low[u] = min(low[u], low[v]);
+                } else if (stackMember[v]) {
+                    low[u] = min(low[u], disc[v]);
+                }
+            }
+        }
+
+        if (low[u] == disc[u]) {
+            vector<int> SCC;
+            int v;
+            do {
+                v = st.top();
+                st.pop();
+                stackMember[v] = false;
+                SCC.push_back(v);
+            } while (v != u);
+            SCCs.push_back(SCC);
+        }
+    }
+    vector<vector<int>> tarjansAlgorithmMatrix(int** graph, int size) 
+    {
+        int numVertices = size;
+        vector<int> low(numVertices, -1);
+        vector<int> disc(numVertices, -1);
+        vector<bool> stackMember(numVertices, false);
+        stack<int> st;
+        vector<vector<int>> SCCs;
+        int time = 0;
+
+        for (int u = 0; u < numVertices; ++u) {
+            if (disc[u] == -1) {
+                tarjansSCCMatrix(u, graph, low, disc, st, stackMember, SCCs, time, size);
+            }
+        }
+
+        return SCCs;
+    }
+    void tarjansSCCTable(int u, int** table, vector<int>& low, vector<int>& disc, stack<int>& st, vector<bool>& stackMember, vector<vector<int>>& SCCs, int& time) 
+    {
+        disc[u] = low[u] = ++time;
+        st.push(u);
+        stackMember[u] = true;
+
+        for(int i = 0; i < 2; i++)
+        {
+            if(disc[table[u][i]] == -1)
+            {
+                tarjansSCCTable(table[u][i], table, low, disc, st, stackMember, SCCs, time);
+                low[u] = min(low[u], low[table[u][i]]);
+            }
+            else if(stackMember[table[u][i]])
+                low[u] = min(low[u], disc[table[u][i]]);
+
+        }
+
+        if (low[u] == disc[u]) {
+            vector<int> SCC;
+            int v;
+            do {
+                v = st.top();
+                st.pop();
+                stackMember[v] = false;
+                SCC.push_back(v);
+            } while (v != u);
+            SCCs.push_back(SCC);
+        }
+    }
+    vector<vector<int>> tarjansAlgorithmTable(int** table, int numVertices) 
+    {
+        vector<int> low(numVertices, -1);
+        vector<int> disc(numVertices, -1);
+        vector<bool> stackMember(numVertices, false);
+        stack<int> st;
+        vector<vector<int>> SCCs;
+        int time = 0;
+
+        for (int u = 0; u < numVertices; ++u) {
+            if (disc[u] == -1) {
+                tarjansSCCTable(u, table, low, disc, st, stackMember, SCCs, time);
+            }
+        }
+
+        return SCCs;
     }
 
 };
