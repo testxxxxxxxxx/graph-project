@@ -139,7 +139,7 @@ namespace Functions
     }
     int** generateGraphTable(string *inputTable, int size)
     {
-        int **table = new int*[size];
+        int **table = new int*[size + 2];
         string inputValue = "";
         string value = "";
         int it = 0;
@@ -159,6 +159,17 @@ namespace Functions
                 if(inputTable[i][x] != ' ')
                 {
                     value += inputTable[i][x];
+
+                    if(x == inputTable[i].length() - 1)
+                    {
+                        table[it][0] = i;
+                        table[it][1] = stoi(value);
+
+                        it++;
+
+                        value = "";
+
+                    }
 
                 }
                 else
@@ -203,6 +214,14 @@ namespace Functions
                 if(inputList[i][x] != ' ')
                 {
                     value += inputList[i][x];
+
+                    if(x == inputList[i].length() - 1)
+                    {
+                        list[i][it] = stoi(value);
+
+                        value = "";
+
+                    }
 
                 }
                 else
@@ -276,6 +295,9 @@ namespace Functions
 
             cout<<" ]";
 
+            if(i < size - 1)
+                cout<<" ,";
+
         }
 
         cout<<endl;
@@ -302,7 +324,7 @@ namespace Functions
     }
     bool findEdgeInMatrix(int **matrix, int size, int from, int to)
     {
-        bool isInSet = from > 0 && from <= size && to > 0 && to <= size;
+        bool isInSet = from >= 0 && from <= size && to >= 0 && to <= size;
 
         if(isInSet)
         {
@@ -315,7 +337,7 @@ namespace Functions
     }
     bool findEdgeInTable(int **table, int size, int from, int to)
     {
-        bool isInSet = from > 0 && from <= size && to > 0 && to <= size;
+        bool isInSet = from >= 0 && from <= size && to >= 0 && to <= size;
 
         if(isInSet)
         {
@@ -332,7 +354,7 @@ namespace Functions
     }
     bool findEdgeInList(int **list, int size, int from, int to)
     {
-        bool isInSet = from > 0 && from <= size && to > 0 && to <= size;
+        bool isInSet = from >= 0 && from <= size && to >= 0 && to <= size;
 
         if(isInSet)
         {
@@ -758,6 +780,58 @@ namespace Functions
         for (int u = 0; u < numVertices; ++u) {
             if (disc[u] == -1) {
                 tarjansSCCTable(u, table, low, disc, st, stackMember, SCCs, time);
+            }
+        }
+
+        return SCCs;
+    }
+    void tarjansSCCList(int u, int **list, vector<int>& low, vector<int>& disc, stack<int>& st, vector<bool>& stackMember, vector<vector<int>>& SCCs, int& time, int size) 
+    {
+        disc[u] = low[u] = ++time;
+        st.push(u);
+        stackMember[u] = true;
+
+        for(int i = 0; i < size; i++)
+        {
+            if(list[u][i] != -1)
+            {
+
+                if(disc[list[u][i]])
+                {
+                    tarjansSCCList(list[u][i], list, low, disc, st, stackMember, SCCs, time, size);
+                    low[u] = min(low[u], low[list[u][i]]);
+                }
+                else if(stackMember[list[u][i]])
+                    low[u] = min(low[u], disc[list[i][u]]);
+
+            }
+
+        }
+
+        if (low[u] == disc[u]) {
+            vector<int> SCC;
+            int v;
+            do {
+                v = st.top();
+                st.pop();
+                stackMember[v] = false;
+                SCC.push_back(v);
+            } while (v != u);
+            SCCs.push_back(SCC);
+        }
+    }
+    vector<vector<int>> tarjansAlgorithmList(int **list, int numVertices) 
+    {
+        vector<int> low(numVertices, -1);
+        vector<int> disc(numVertices, -1);
+        vector<bool> stackMember(numVertices, false);
+        stack<int> st;
+        vector<vector<int>> SCCs;
+        int time = 0;
+
+        for (int u = 0; u < numVertices; ++u) {
+            if (disc[u] == -1) {
+                tarjansSCCList(u, list, low, disc, st, stackMember, SCCs, time, numVertices);
             }
         }
 

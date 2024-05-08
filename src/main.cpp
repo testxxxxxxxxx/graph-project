@@ -132,16 +132,38 @@ int main(int argc, char *argv[])
                         printList(graph, numberOfNodes);
 
                 }
-                if(command == "Remove")
+                if(command == "BFS")
                 {
 
-                }
-                if(command == "Delete")
-                {
+                    bfsMatrix(graph, numberOfNodes, 0);
 
                 }
-                if(command == "FindMinMax")
+                if(command == "DFS")
                 {
+                    dfsTraversalMatrix(graph, numberOfNodes);
+
+                }
+                if(command == "Find")
+                {
+                    int from = 0;
+                    int to = 0;
+
+                    cout<<"from>";
+                    cin>>from;
+
+                    cout<<endl;
+
+                    cout<<"to>";
+                    cin>>to;
+
+                    cout<<endl;
+
+                    if(type == "matrix" && findEdgeInMatrix(graph, numberOfNodes, from, to))
+                        cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
+                    else
+                        cout<<"True: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
+
+
                     
                 }
                 if(command == "Export")
