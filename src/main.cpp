@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../include/functions.cpp"
+#include <vector>
 #include <cstring>
 
 using namespace std;
@@ -81,12 +82,8 @@ int main(int argc, char *argv[])
 
                 }
 
-                if(type == "matrix")
-                {
-                   cout<<"test"<<endl; 
+                if(type == "matrix") 
                    graph = generateGraphMatrix(inputMatrix, numberOfNodes);
-
-                }
                 else if(type == "table")
                     graph = generateGraphTable(inputMatrix, numberOfNodes);
                 else if(type == "list")
@@ -134,13 +131,22 @@ int main(int argc, char *argv[])
                 }
                 if(command == "BFS")
                 {
-
-                    bfsMatrix(graph, numberOfNodes, 0);
+                    if(type == "matrix")
+                        bfsMatrix(graph, numberOfNodes, 0);
+                    if(type == "table")
+                        bfsTable(graph, numberOfNodes, 0);
+                    if(type == "list")
+                        bfsList(graph, numberOfNodes, 0);
 
                 }
                 if(command == "DFS")
                 {
-                    dfsTraversalMatrix(graph, numberOfNodes);
+                    if(type == "matrix")
+                        dfsTraversalMatrix(graph, numberOfNodes);
+                    else if(type == "table")
+                        dfsTraversalTable(graph, numberOfNodes);
+                    else if(type == "list")
+                        dfsTraversalList(graph, numberOfNodes);
 
                 }
                 if(command == "Find")
@@ -161,17 +167,104 @@ int main(int argc, char *argv[])
                     if(type == "matrix" && findEdgeInMatrix(graph, numberOfNodes, from, to))
                         cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
                     else
-                        cout<<"True: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
+                        cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
 
 
                     
                 }
-                if(command == "Export")
+                if(command == "Khan")
                 {
 
+                    if(type == "matrix")
+                    {
+                        vector<int> result = topologicalSortKhanMatrix(graph, numberOfNodes);
+
+                        for(int& i : result)
+                        {
+                            cout<<i<<" ";
+
+                        }
+
+                    }
+                    if(type == "table")
+                    {
+                        vector<int> result = topologicalSortKhanTable(graph, numberOfNodes);
+
+                        for(int& i : result)
+                        {
+                            cout<<i<<" ";
+
+                        }
+
+                    }
+                    if(type == "list")
+                    {
+                        vector<int> result = topologicalSortKhanList(graph, numberOfNodes);
+
+                        for(int& i : result)
+                        {
+                            cout<<i<<" ";
+
+                        }
+
+                    }
+
+                    cout<<endl;
                 }                
-                if(command == "Rebalance")
+                if(command == "Tarjan")
                 {
+                    if(type == "matrix")
+                    {
+
+                        vector<vector<int>> result = tarjansAlgorithmMatrix(graph, numberOfNodes);
+
+                        for(int i = 0; i < result.size(); i++)
+                        {
+                            for(int j = 0; j < result[i].size(); j++)
+                            {
+                                cout<<result[i][j]<<" ";
+
+                            }
+
+                        }
+
+                    }
+                    else if(type == "table")
+                    {
+                        vector<vector<int>> result = tarjansAlgorithmTable(graph, numberOfNodes);
+
+                        for(int i = 0; i < result.size(); i++)
+                        {
+                            for(int j = 0; j < result[i].size(); j++)
+                            {
+                                cout<<result[i][j]<<" ";
+
+                            }
+
+                        }
+
+
+                    }
+                    else if(type == "list")
+                    {
+                        vector<vector<int>> result = tarjansAlgorithmList(graph, numberOfNodes);
+
+                        cout<<"test"<<endl;
+
+                        for(int i = 0; i < result.size(); i++)
+                        {
+                            for(int j = 0; j < result[i].size(); j++)
+                            {
+                                cout<<result[i][j]<<" ";
+
+                            }
+
+                        }
+
+
+                    }
+
+                    cout<<endl;
                     
                 }
                 if(command == "Exit")

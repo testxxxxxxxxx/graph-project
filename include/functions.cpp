@@ -3,12 +3,15 @@
 #include <stack>
 #include <queue>
 #include <random>
+#include <algorithm>
 
 using namespace std;
 
 namespace Functions
 {
-    int** generateGraph(int nodes, double saturation)
+    int tableSize = 0;
+
+    /*int** generateGraph(int nodes, double saturation)
     {
         int **graph = new int*[nodes];
         int numEdges = (nodes - 1) + (nodes * (nodes - 1) / 2) * saturation;
@@ -91,6 +94,52 @@ namespace Functions
         }
 
         return graph;
+    }*/
+    int** generujDrzewoRozpinajace(int n) {
+        int* parent = new int[n];
+        for (int i = 0; i < n; ++i) {
+            parent[i] = i; 
+        }
+
+        random_device rd;
+        mt19937 gen(rd());
+        shuffle(parent, parent + n, gen);
+
+        int** macierzSasiedztwa = new int*[n];
+        for (int i = 0; i < n; ++i) {
+            macierzSasiedztwa[i] = new int[n];
+            for (int j = 0; j < n; ++j) {
+                macierzSasiedztwa[i][j] = 0;
+            }
+        }
+
+        // Dodanie krawędzi do drzewa
+        for (int i = 1; i < n; ++i) {
+            int u = parent[i];
+            int v = parent[gen() % i];
+            macierzSasiedztwa[u][v] = 1;
+        }
+
+        delete[] parent;
+        return macierzSasiedztwa;
+    }
+    int** generateGraph(int n, int nasycenie) {
+        int** drzewo = generujDrzewoRozpinajace(n);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+
+        // Dodawanie dodatkowych losowych krawędzi
+        for (int i = n - 1; i < nasycenie; ++i) {
+            int u = gen() % n;
+            int v = gen() % n;
+            if (u != v && drzewo[u][v] != 1) {
+                drzewo[u][v] = 1;
+            } else {
+                --i;
+            }
+        }
+
+        return drzewo;
     }
     int** generateGraphMatrix(string *inputMatrix, int size)
     {
@@ -139,16 +188,30 @@ namespace Functions
     }
     int** generateGraphTable(string *inputTable, int size)
     {
-        int **table = new int*[size + 2];
+        tableSize = 0;
+
+        for(int i = 0; i < size; i++)
+        {
+            for(int j = 0; j < inputTable[i].length(); j++)
+            {
+                if(inputTable[i][j] == ' ' || j == inputTable[i].length() - 1)
+                    tableSize++;
+
+            }
+        }
+
+        int **table = new int*[tableSize];
         string inputValue = "";
         string value = "";
         int it = 0;
 
-        for(int i = 0; i < size; i++)
+        for(int i = 0; i < tableSize; i++)
         {
             table[i] = new int[2];
 
         }
+
+        cout<<"tableSize: "<<tableSize<<endl;
 
         for(int i = 0; i < size; i++)
         {
@@ -167,6 +230,8 @@ namespace Functions
 
                         it++;
 
+                        cout<<"it: "<<it<<endl;
+
                         value = "";
 
                     }
@@ -179,6 +244,8 @@ namespace Functions
 
                     value = "";
                     it++;
+
+                    cout<<"it: "<<it<<endl;
                 }
 
             }
@@ -280,7 +347,7 @@ namespace Functions
     {
         cout<<"[ ";
 
-        for(int i = 0; i < size; i++)
+        for(int i = 0; i < tableSize; i++)
         {
             cout<<"[ ";
 
