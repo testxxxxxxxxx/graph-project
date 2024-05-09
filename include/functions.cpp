@@ -95,51 +95,25 @@ namespace Functions
 
         return graph;
     }*/
-    int** generujDrzewoRozpinajace(int n) {
-        int* parent = new int[n];
+    int** generateGraph(int n, double saturation) {
+        int** macierz = new int*[n]; // Tworzenie tablicy wskaźników na int
+        
+        int edges = (n * (n - 1) / 2) * (saturation / 100);
+        int howMany = 0;
         for (int i = 0; i < n; ++i) {
-            parent[i] = i; 
-        }
+            macierz[i] = new int[n]; // Tworzenie wierszy macierzy
+            for (int j = i + 1; j < n; ++j) { // Iteracja po górnej części macierzy
+                // Generowanie losowej wartości (0 lub 1) zgodnie z prawdopodobieństwem nasycenia
+                if(howMany < edges)
+                {
+                    macierz[i][j] = 1;
+                    howMany++;
 
-        random_device rd;
-        mt19937 gen(rd());
-        shuffle(parent, parent + n, gen);
-
-        int** macierzSasiedztwa = new int*[n];
-        for (int i = 0; i < n; ++i) {
-            macierzSasiedztwa[i] = new int[n];
-            for (int j = 0; j < n; ++j) {
-                macierzSasiedztwa[i][j] = 0;
+                }
             }
         }
-
-        // Dodanie krawędzi do drzewa
-        for (int i = 1; i < n; ++i) {
-            int u = parent[i];
-            int v = parent[gen() % i];
-            macierzSasiedztwa[u][v] = 1;
-        }
-
-        delete[] parent;
-        return macierzSasiedztwa;
-    }
-    int** generateGraph(int n, int nasycenie) {
-        int** drzewo = generujDrzewoRozpinajace(n);
-        std::random_device rd;
-        std::mt19937 gen(rd());
-
-        // Dodawanie dodatkowych losowych krawędzi
-        for (int i = n - 1; i < nasycenie; ++i) {
-            int u = gen() % n;
-            int v = gen() % n;
-            if (u != v && drzewo[u][v] != 1) {
-                drzewo[u][v] = 1;
-            } else {
-                --i;
-            }
-        }
-
-        return drzewo;
+        
+        return macierz;
     }
     int** generateGraphMatrix(string *inputMatrix, int size)
     {
@@ -308,7 +282,7 @@ namespace Functions
     }
     void printMatrix(int **matrix, int size)
     {
-        cout<<" "<<"|";
+        cout<<" "<<" |";
 
         for(int i = 0; i < size; i++)
         {
@@ -375,7 +349,7 @@ namespace Functions
 
         for(int i = 0; i < size; i++)
         {
-            cout<<i<<" ";
+            cout<<i<<" | ";
 
             for(int j = 0; j < size; j++)
             {
@@ -553,12 +527,12 @@ namespace Functions
 
         for (int neighbor = 0; neighbor < size; neighbor++) 
         {
-            if (matrix[vertex][neighbor] == 1 && !visited[neighbor]) 
+            if (matrix[vertex][neighbor] == 1 && !visited[neighbor])
                 dfsMatrix(matrix, neighbor, visited, size);
             
         }
-    }
 
+    }
     void dfsTraversalMatrix(int **matrix, int size) 
     {
         int numVertices = size;

@@ -166,9 +166,20 @@ int main(int argc, char *argv[])
 
                     if(type == "matrix" && findEdgeInMatrix(graph, numberOfNodes, from, to))
                         cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
-                    else
+                    else if(type == "matrix")
                         cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
 
+                    
+                    if(type == "table" && findEdgeInTable(graph, tableSize, from, to))
+                        cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
+                    else if(type == "table")
+                        cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
+
+                    
+                    if(type == "list" && findEdgeInList(graph, numberOfNodes, from, to))
+                        cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
+                    else if(type == "list")
+                        cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
 
                     
                 }
