@@ -31,10 +31,24 @@ int main(int argc, char *argv[])
                 cout<<"node>";
                 cin>>numberOfNodes;
 
+                if(numberOfNodes <= 0)
+                {
+                    cout<<"Error"<<endl;
+
+                    return 0;
+                }
+
                 cout<<endl;
 
                 cout<<"saturation>";
                 cin>>saturation;
+
+                if(saturation <= 0)
+                {
+                    cout<<"Error"<<endl;
+
+                    return 0;
+                }
 
                 graph = generateGraph(numberOfNodes, saturation);
 
@@ -51,8 +65,22 @@ int main(int argc, char *argv[])
                 cout<<"type>";
                 cin>>type;
 
+                if(type != "matrix" && type != "table" && type != "list")
+                {
+                    cout<<"Error"<<endl;
+
+                    return 0;
+                }
+
                 cout<<"node>";
                 cin>>numberOfNodes;
+
+                if(numberOfNodes <= 0)
+                {
+                    cout<<"Error"<<endl;
+
+                    return 0;
+                }
 
                 cout<<numberOfNodes<<endl;
 

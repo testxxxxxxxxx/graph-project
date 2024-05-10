@@ -595,7 +595,6 @@ namespace Functions
 
         vector<bool> visited(numVertices, false);
 
-        cout << "DFS traversal: ";
         for (int i = 0; i < numVertices; ++i) 
         {
             if (!visited[i]) 
