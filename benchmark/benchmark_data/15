@@ -1,9 +1,9 @@
-list
-64
+table
+32768
 100
 Find
-32
-63
+16384
+32767
 Khan
 Tarjan
 Exit

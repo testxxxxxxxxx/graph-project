@@ -20,8 +20,9 @@ int main(int argc, char *argv[])
     int saturation = 0;
     string type = "";
     int** graph;
-    string path = "";
-    string name = "";
+    int** matrix;
+    string path = "./benchmark_results/";
+    string name = "benchmark_results.csv";
     string dir = path + name;
 
     fstream benchmarkResult;
@@ -69,6 +70,7 @@ int main(int argc, char *argv[])
                 }
 
                 graph = generateGraph(numberOfNodes, saturation);
+                matrix = generateGraph(numberOfNodes, saturation);
 
                 if(type == "table")
                     graph = convertMatrixToTable(graph, numberOfNodes);
@@ -213,18 +215,17 @@ int main(int argc, char *argv[])
 
                     cout<<endl;
 
+                    auto startEdge = chrono::high_resolution_clock::now();
+
                     if(type == "matrix" && findEdgeInMatrix(graph, numberOfNodes, from, to))
                         cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
                     else if(type == "matrix")
                         cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
-
                     
                     if(type == "table" && findEdgeInTable(graph, tableSize, from, to))
                         cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
                     else if(type == "table")
                         cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
-
-                    auto startEdge = chrono::high_resolution_clock::now();
                     
                     if(type == "list" && findEdgeInList(graph, numberOfNodes, from, to))
                         cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
@@ -243,8 +244,15 @@ int main(int argc, char *argv[])
 
                     if(type == "matrix")
                     {
+                        auto startKhan = chrono::high_resolution_clock::now();
 
                         vector<int> result = topologicalSortKhanMatrix(graph, numberOfNodes);   
+
+                        auto stopKhan = chrono::high_resolution_clock::now();
+
+                        auto timeKhan = chrono::duration_cast<chrono::milliseconds>(stopKhan - startKhan);
+
+                        benchmarkResult<<"Khan,"<<to_string(numberOfNodes)+","<<to_string(timeKhan.count())<<endl;
 
                         for(int& i : result)
                         {
@@ -255,7 +263,15 @@ int main(int argc, char *argv[])
                     }
                     if(type == "table")
                     {
+                        auto startKhan = chrono::high_resolution_clock::now();
+
                         vector<int> result = topologicalSortKhanTable(graph, tableSize);
+
+                        auto stopKhan = chrono::high_resolution_clock::now();
+
+                        auto timeKhan = chrono::duration_cast<chrono::milliseconds>(stopKhan - startKhan);
+
+                        benchmarkResult<<"Khan,"<<to_string(numberOfNodes)+","<<to_string(timeKhan.count())<<endl;
 
                         for(int& i : result)
                         {
@@ -290,10 +306,17 @@ int main(int argc, char *argv[])
                 {
                     if(type == "matrix")
                     {
+                        auto startTarjan = chrono::high_resolution_clock::now();
 
                         vector<vector<int>> result = tarjansAlgorithmMatrix(graph, numberOfNodes);
 
                         vector<int> reversed = reverseVector(result);
+
+                        auto stopTarjan = chrono::high_resolution_clock::now();
+
+                        auto timeTarjan = chrono::duration_cast<chrono::milliseconds>(stopTarjan - startTarjan);
+
+                        benchmarkResult<<"Tarjan,"<<to_string(numberOfNodes)+","<<to_string(timeTarjan.count())<<endl;
 
                         for(int& i : reversed)
                         {
@@ -304,9 +327,17 @@ int main(int argc, char *argv[])
                     }
                     else if(type == "table")
                     {
+                        auto startTarjan = chrono::high_resolution_clock::now();
+
                         vector<vector<int>> result = tarjansAlgorithmTable(graph, numberOfNodes);
 
                         vector<int> reversed = reverseVector(result);
+
+                        auto stopTarjan = chrono::high_resolution_clock::now();
+
+                        auto timeTarjan = chrono::duration_cast<chrono::milliseconds>(stopTarjan - startTarjan);
+
+                        benchmarkResult<<"Tarjan,"<<to_string(numberOfNodes)+","<<to_string(timeTarjan.count())<<endl;
 
                         for(int& i : reversed)
                         {
@@ -319,7 +350,9 @@ int main(int argc, char *argv[])
                     {
                         auto startTarjan = chrono::high_resolution_clock::now();
 
-                        vector<vector<int>> result = tarjansAlgorithmList(graph, numberOfNodes);
+                        //vector<vector<int>> result = tarjansAlgorithmMatrix(matrix, numberOfNodes);
+
+                        vector<vector<int>> result = tarjansAlgorithmList(matrix, numberOfNodes);
 
                         vector<int> reversed = reverseVector(result);
 
@@ -341,7 +374,17 @@ int main(int argc, char *argv[])
                     
                 }
                 if(command == "Exit")
+                {
+                    for(int i = 0; i < numberOfNodes;i++)
+                    {
+                        delete[] graph[i];
+
+                    }
+
+                    delete[] graph;
+
                     return 0;
+                }
 
             }
             

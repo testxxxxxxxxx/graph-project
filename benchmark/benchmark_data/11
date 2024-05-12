@@ -1,9 +1,9 @@
-list
-256
+table
+2048
 100
 Find
-128
-255
+1024
+2047
 Khan
 Tarjan
 Exit

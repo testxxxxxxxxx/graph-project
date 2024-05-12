@@ -47,7 +47,7 @@ def main() -> None:
 
     generator: Generator = Generator(19)
 
-    generator.generateToPath('benchmark_results/')
+    generator.generateToPath('benchmark_data/')
 
 if __name__ == '__main__':
     main()
