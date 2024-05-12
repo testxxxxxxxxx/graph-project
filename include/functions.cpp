@@ -4,6 +4,7 @@
 #include <queue>
 #include <random>
 #include <algorithm>
+#include <chrono>
 
 using namespace std;
 
@@ -187,6 +188,85 @@ namespace Functions
                     value = "";
                     it++;
 
+                }
+
+            }
+
+        }
+
+        return list;
+    }
+    int** convertMatrixToTable(int **graph, int size)
+    {
+        int edgesNum = 0;
+
+        for(int i = 0; i < size; i++)
+        {
+            for(int j = 0; j < size; j++)
+            {
+                if(graph[i][j] == 1)
+                    edgesNum++;
+
+            }
+
+        }
+
+        int **table = new int*[edgesNum];
+        int it = 0;
+
+        for(int j = 0; j < edgesNum; j++)
+        {
+            table[j] = new int[2];
+
+        }
+
+        tableSize = edgesNum;
+
+        for(int i = 0; i < size; i++)
+        {
+            for(int j = 0; j < size; j++)
+            {
+                if(graph[i][j] == 1)
+                {
+                    cout<<it<<endl;
+
+                    table[it][0] = i;
+                    table[it][1] = j;
+
+                    cout<<i<<i<<endl;
+
+                    it++;
+                }
+
+
+            }
+
+        }
+
+        return table;
+    }
+    int** convertMatrixToList(int **graph, int size)
+    {
+        int **list = new int*[size];
+
+        for(int i = 0; i < size; i++)
+        {
+            list[i] = new int[size];
+
+            fill_n(list[i], size, -1);
+
+        }
+
+        for(int i = 0; i < size; i++)
+        {
+            int it = 0;
+
+            for(int j = 0; j < size; j++)
+            {
+                if(graph[i][j] == 1)
+                {
+                    list[i][it] = j;
+                    it++;
                 }
 
             }
@@ -739,6 +819,38 @@ namespace Functions
         }
 
         return SCCs;
+    }
+    vector<int> reverseVector(vector<vector<int>>& result)
+    {
+        stack<int> helper;
+        vector<int>::iterator it;
+        vector<int> reversedVector;
+        int top = 0;
+
+        for(int i = 0; i < result.size(); i++)
+        {
+            for(int j = 0; j < result[i].size(); j++)
+            {
+                helper.push(result[i][j]);
+
+            }
+
+        }
+
+        for(int i = 0; i < result.size(); i++)
+        {
+            for(int j = 0; j < result[i].size(); j++)
+            {
+                top = helper.top();
+
+                reversedVector.push_back(top);
+
+                helper.pop();
+            }
+
+        }
+
+        return reversedVector;
     }
     void tarjansSCCList(int u, int **list, vector<int>& low, vector<int>& disc, stack<int>& st, vector<bool>& stackMember, vector<vector<int>>& SCCs, int& time, int size) 
     {

@@ -12,6 +12,7 @@ class File():
 
         with open(self.__dir, self.__mode) as f:
 
+            f.write("list" + "\n")
             f.write(str(value) + "\n")
             f.write(str(100) + "\n")
             f.write("Find" + "\n")
@@ -33,8 +34,14 @@ class Generator():
 
             name: str = str(i)
 
+            if i <= 1:
+                fr: int = 0
+            else:
+                fr: int = pow(2, i) // 2
+
             file: File = File(path, name, 'w')
-            file.save(pow(2, i), pow(2, i) // 2, pow(2, i) - 1)
+
+            file.save(pow(2, i), fr, pow(2, i) - 1)
 
 def main() -> None:
 

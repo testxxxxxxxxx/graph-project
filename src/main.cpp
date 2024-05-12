@@ -2,6 +2,7 @@
 #include "../include/functions.cpp"
 #include <vector>
 #include <cstring>
+#include <fstream>
 
 using namespace std;
 using namespace Functions;
@@ -19,12 +20,29 @@ int main(int argc, char *argv[])
     int saturation = 0;
     string type = "";
     int** graph;
+    string path = "";
+    string name = "";
+    string dir = path + name;
+
+    fstream benchmarkResult;
+
+    benchmarkResult.open(dir, ios::out | ios::app);
 
             if(strcmp(argv[1], "--generate") == 0) 
             {
                 int *n;
                 int *nodes;
                 string insert;
+
+                cout<<"type>";
+                cin>>type;
+
+                if(type != "matrix" && type != "table" && type != "list")
+                {
+                    cout<<"Error"<<endl;
+
+                    return 0;
+                }
 
                 cout<<endl;
 
@@ -52,7 +70,10 @@ int main(int argc, char *argv[])
 
                 graph = generateGraph(numberOfNodes, saturation);
 
-                type = "matrix";
+                if(type == "table")
+                    graph = convertMatrixToTable(graph, numberOfNodes);
+                else if(type == "list")
+                    graph = convertMatrixToList(graph, numberOfNodes);
 
             }
             else if(strcmp(argv[1], "--user-provided") == 0)
@@ -203,12 +224,18 @@ int main(int argc, char *argv[])
                     else if(type == "table")
                         cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
 
+                    auto startEdge = chrono::high_resolution_clock::now();
                     
                     if(type == "list" && findEdgeInList(graph, numberOfNodes, from, to))
                         cout<<"True: edge("<<from<<","<<to<<")"<<" exists in the Graph"<<endl;
                     else if(type == "list")
                         cout<<"False: edge("<<from<<","<<to<<")"<<" does not exists in the Graph"<<endl;
 
+                    auto stopEdge = chrono::high_resolution_clock::now();
+
+                    auto timeEdge = chrono::duration_cast<chrono::milliseconds>(stopEdge - startEdge);
+
+                    benchmarkResult<<"Find,"<<to_string(numberOfNodes)+","<<to_string(timeEdge.count())<<endl;
                     
                 }
                 if(command == "Khan")
@@ -216,7 +243,8 @@ int main(int argc, char *argv[])
 
                     if(type == "matrix")
                     {
-                        vector<int> result = topologicalSortKhanMatrix(graph, numberOfNodes);
+
+                        vector<int> result = topologicalSortKhanMatrix(graph, numberOfNodes);   
 
                         for(int& i : result)
                         {
@@ -227,7 +255,7 @@ int main(int argc, char *argv[])
                     }
                     if(type == "table")
                     {
-                        vector<int> result = topologicalSortKhanTable(graph, numberOfNodes);
+                        vector<int> result = topologicalSortKhanTable(graph, tableSize);
 
                         for(int& i : result)
                         {
@@ -238,7 +266,15 @@ int main(int argc, char *argv[])
                     }
                     if(type == "list")
                     {
+                        auto startKhan = chrono::high_resolution_clock::now();
+
                         vector<int> result = topologicalSortKhanList(graph, numberOfNodes);
+
+                        auto stopKhan = chrono::high_resolution_clock::now();
+
+                        auto timeKhan = chrono::duration_cast<chrono::milliseconds>(stopKhan - startKhan);
+
+                        benchmarkResult<<"Khan,"<<to_string(numberOfNodes)+","<<to_string(timeKhan.count())<<endl;
 
                         for(int& i : result)
                         {
@@ -257,13 +293,11 @@ int main(int argc, char *argv[])
 
                         vector<vector<int>> result = tarjansAlgorithmMatrix(graph, numberOfNodes);
 
-                        for(int i = 0; i < result.size(); i++)
-                        {
-                            for(int j = 0; j < result[i].size(); j++)
-                            {
-                                cout<<result[i][j]<<" ";
+                        vector<int> reversed = reverseVector(result);
 
-                            }
+                        for(int& i : reversed)
+                        {
+                            cout<<i<<" ";
 
                         }
 
@@ -272,38 +306,38 @@ int main(int argc, char *argv[])
                     {
                         vector<vector<int>> result = tarjansAlgorithmTable(graph, numberOfNodes);
 
-                        for(int i = 0; i < result.size(); i++)
-                        {
-                            for(int j = 0; j < result[i].size(); j++)
-                            {
-                                cout<<result[i][j]<<" ";
+                        vector<int> reversed = reverseVector(result);
 
-                            }
+                        for(int& i : reversed)
+                        {
+                            cout<<i<<" ";
 
                         }
-
 
                     }
                     else if(type == "list")
                     {
+                        auto startTarjan = chrono::high_resolution_clock::now();
+
                         vector<vector<int>> result = tarjansAlgorithmList(graph, numberOfNodes);
 
-                        cout<<"test"<<endl;
+                        vector<int> reversed = reverseVector(result);
 
-                        for(int i = 0; i < result.size(); i++)
+                        auto stopTarjan = chrono::high_resolution_clock::now();
+
+                        auto timeTarjan = chrono::duration_cast<chrono::milliseconds>(stopTarjan - startTarjan);
+
+                        benchmarkResult<<"Tarjan,"<<to_string(numberOfNodes)+","<<to_string(timeTarjan.count())<<endl;
+
+                        for(int& i : reversed)
                         {
-                            for(int j = 0; j < result[i].size(); j++)
-                            {
-                                cout<<result[i][j]<<" ";
-
-                            }
+                            cout<<i<<" ";
 
                         }
 
+                        cout<<endl;
 
                     }
-
-                    cout<<endl;
                     
                 }
                 if(command == "Exit")
