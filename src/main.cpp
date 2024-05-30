@@ -375,12 +375,12 @@ int main(int argc, char *argv[])
                 }
                 if(command == "Exit")
                 {
-                    for(int i = 0; i < numberOfNodes;i++)
+                    for(int i = 0; i < numberOfNodes - 1; i++)
                     {
                         delete[] graph[i];
 
                     }
-
+                    
                     delete[] graph;
 
                     return 0;
