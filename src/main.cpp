@@ -1,3 +1,5 @@
+//Author: Marcin Wrzaskowski
+//Index number: 160329
 #include <iostream>
 #include "../include/functions.cpp"
 #include <vector>
@@ -380,7 +382,7 @@ int main(int argc, char *argv[])
                         delete[] graph[i];
 
                     }
-                    
+
                     delete[] graph;
 
                     return 0;

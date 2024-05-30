@@ -1,3 +1,5 @@
+//Author: Marcin Wrzaskowski
+//Index number: 160329
 #include <iostream>
 #include <vector>
 #include <stack>
